@@ -1,11 +1,52 @@
+set nocompatible               " Be iMproved
+set shell=/bin/bash
+
+ if has('vim_starting')
+   set runtimepath+=~/.vim/bundle/neobundle.vim/
+ endif
+
+ call neobundle#rc(expand('~/.vim/bundle/'))
+
+ " My Bundles here:
+ "
+ " Note: You don't set neobundle setting in .gvimrc!
 syntax enable
 set number
 set background="dark"
 let g:solarized_termcolors=256
+"let g:Powerline_theme='short'
+let g:solarized_contrast = "high"
+let g:solarized_visibility = "high"
+let g:solarized_termtrans = 1
+let g:Powerline_colorscheme='solarized256_dark'
+
+let g:Powerline_symbols = 'fancy'
+let g:Powerline_mode_n = 'N'
+
+set t_Co=256                   " Explicitly tell Viw that the terminal supports 256 colors
 colorscheme solarized
+"colorscheme jellybeans
 
 set nocompatible               " Be iMproved
 filetype off                   " Required!
+
+" from https://github.com/spf13/spf13-vim/blob/master/.vimrc
+if has('statusline')
+  set laststatus=2 " Always show the statusline
+  " Broken down into easily includeable segments
+  set statusline=%<%f\    " Filename
+  set statusline+=%w%h%m%r " Options
+  set statusline+=%{fugitive#statusline()} "  Git Hotness
+  set statusline+=\ [%{&ff}/%Y]            " filetype
+  set statusline+=\ [%{getcwd()}]          " current dir
+  set statusline+=%#warningmsg#
+  set statusline+=%{SyntasticStatuslineFlag()}
+  set statusline+=%*
+  let g:syntastic_enable_signs=1
+  set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+endif
+    
+set encoding=utf-8             " Necessary to show Unicode glyphs
 
 " change the mapleader from \ to ,
 let mapleader=","
@@ -14,8 +55,34 @@ let mapleader=","
 let g:slime_target = "screen"
 let g:slime_paste_file = "$HOME/.slime_paste"
 
+" Ack
+let g:ackprg="ack -H --sort-files --column"
+
+" Easy motion
+let g:EasyMotion_leader_key = '<leader><leader>'
+
+" Gist
+let g:gist_open_browser_after_post = 1
+let g:gist_post_private = 1
+
+" vim-slime sent command to tmux
+let g:slime_target = "tmux"
+
+" FufFile
 map ,f :FufFile <CR>
-map ,g :Ack <CR>
+
+nmap <leader>b :TagbarToggle<CR>
+
+" Open a new tab and search for something
+nmap <leader>g :sp<CR>:Ack ""<Left>
+nmap <leader>gv :vs<CR>:Ack ""<Left>
+map ,s :update <CR>
+
+" Immediatly search for the  word under the cursor
+nmap <leader>G :tab split<CR>:Ack <C-r><C-w><CR>
+
+" ESC
+imap jj <Esc>
 
 " key mapping for tab navigation
 nmap <Tab> gt
@@ -24,6 +91,13 @@ nmap <S-Tab> gT
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+
+" Set working directory
+nnoremap <leader>. :lcd %:p:h<CR>
+
+" Gundo
+nnoremap <F5> :GundoToggle<CR>
 
 set expandtab                    " use spaces instead of tabs
 set smarttab                     " be smart when using tabs
@@ -58,19 +132,24 @@ set mouse=a
 autocmd filetype python set expandtab
 autocmd filetype html,xml set listchars-=tab:>.
 
-nnoremap j gj
-nnoremap k gk
+" Make j and k work normally for soft wrapped lines
+nnoremap <buffer> j gj
+nnoremap <buffer> k gk
+
+" Make the arrow keys work like TextMate in instert mode
+inoremap <down> <C-C>gja
+inoremap <up> <C-C>gka
 
 " Easy window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+source $VIMRUNTIME/mswin.vim
 
 nmap <silent> ,/ :nohlsearch<CR>
 
 cmap w!! w !sudo tee % >/dev/null
-
 
  if has('vim_starting')
    set runtimepath+=~/.vim/bundle/neobundle.vim/
@@ -91,27 +170,100 @@ cmap w!! w !sudo tee % >/dev/null
  " Original repos on github
  NeoBundle 'tpope/vim-fugitive'
  NeoBundle 'Lokaltog/vim-easymotion'
- NeoBundle 'rstacruz/sparkup', {'rtp': 'vim/'}
- NeoBundle 'https://github.com/scrooloose/nerdtree.git'
- NeoBundle 'https://github.com/tpope/vim-haml.git'
- NeoBundle 'https://github.com/bbommarito/vim-slim.git'
- NeoBundle 'https://github.com/mileszs/ack.vim.git'
- NeoBundle 'https://github.com/wavded/vim-stylus'
- NeoBundle 'https://github.com/digitaltoad/vim-jade.git'
+ NeoBundle 'scrooloose/nerdtree.git'
+ NeoBundle 'tpope/vim-haml.git'
+ NeoBundle 'slim-template/vim-slim.git'
+ NeoBundle 'kchmck/vim-coffee-script.git'
+ NeoBundle 'mileszs/ack.vim.git'
+ NeoBundle 'wavded/vim-stylus'
+ NeoBundle 'digitaltoad/vim-jade.git'
+ NeoBundle 'Lokaltog/vim-powerline.git'
+ NeoBundle 'stephenmckinney/vim-solarized-powerline'
+ NeoBundle 'git@github.com:wincent/Command-T.git'
+ NeoBundle 'kien/ctrlp.vim.git'
+ NeoBundle 'airblade/vim-gitgutter.git'
+ NeoBundle 'tomtom/tcomment_vim.git'
+ NeoBundle 'mattn/gist-vim.git'
+ NeoBundle 'majutsushi/tagbar'
+ NeoBundle 'corntrace/bufexplorer.git'
+ NeoBundle 'twe4ked/vim-peepopen'
+ NeoBundle 'mattn/webapi-vim'
+ NeoBundle 'Rykka/colorv.vim.git'
+ NeoBundle 'sjl/gundo.vim.git'
+ NeoBundle 'moll/vim-node.git'
+ NeoBundle 'jelera/vim-javascript-syntax', {'autoload':{'filetypes':['javascript']}}
+ NeoBundle 'git@github.com:marijnh/tern_for_vim.git'
+ NeoBundle 'git@github.com:vim-scripts/JavaScript-Indent.git'
  " Themes repos
- NeoBundle 'https://github.com/altercation/vim-colors-solarized.git'
+ NeoBundle 'altercation/vim-colors-solarized.git'
  " vim-scripts repos
  NeoBundle 'L9'
- NeoBundle 'FuzzyFinder'
- NeoBundle 'https://github.com/tpope/vim-rails.git'
- NeoBundle 'https://github.com/jpalardy/vim-slime.git'
- " Non github repos
- NeoBundle 'git://git.wincent.com/command-t.git'
+ " NeoBundle 'FuzzyFinder'
+ NeoBundle 'tpope/vim-rails.git'
+ NeoBundle 'jpalardy/vim-slime.git'
  " Non git repos
  NeoBundle 'http://svn.macports.org/repository/macports/contrib/mpvim/'
- NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder'
+ " NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder'
+ " syntastic
+ NeoBundle 'git@github.com:scrooloose/syntastic.git'
+ NeoBundle 'tpope/vim-surround.git'
 
- " ...
+ "Tern settings
+ let g:tern_map_keys = 1
+ let g:tern_show_argument_hints = 'on_hold'
+ let g:tern#is_show_argument_hints_enabled = 1
+
+ let g:syntastic_mode_map = { 'mode': 'passive',
+  \ 'active_filetypes': ['ruby', 'php', 'javascript', 'coffee'],
+  \ 'passive_filetypes': ['html', 'phtml'] }
+ let g:syntastic_javascript_checkers = [ 'jshint', 'gjslint', 'jslint', 'jsl' ]
+ let g:loaded_syntastic_coffee_coffeelint_checker = 1
+ let g:JSLintHighlightErrorLine = 0
+ let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+ let g:syntastic_auto_loc_list = 2
+ let g:syntastic_check_on_open=1
+ let g:syntastic_error_symbol='✗'
+ let g:syntastic_warning_symbol='⚠'
+ let g:syntastic_enable_balloons = 1
+
+ " Fold Lines
+ " au FileType javascript call JavaScriptFold()
+
+ " Use neocomplete.
+ NeoBundle 'git@github.com:Shougo/neocomplete.vim.git'
+ let g:neocomplete#enable_at_startup = 1
+ " Use smartcase.
+ let g:neocomplete#enable_smart_case = 1
+ " Set minimum syntax keyword length.
+ let g:neocomplete#sources#syntax#min_keyword_length = 3
+ let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+ " Enable omni completion.
+ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+ autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+ autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+ " Enable heavy omni completion.
+ if !exists('g:neocomplete#sources#omni#input_patterns')
+   let g:neocomplete#sources#omni#input_patterns = {}
+ endif
+ " Define dictionary.
+ let g:neocomplete#sources#dictionary#dictionaries = {
+  \ 'default' : '',
+  \ 'vimshell' : $HOME.'/.vimshell_hist',
+  \ 'scheme' : $HOME.'/.gosh_completions'
+  \ }
+
+ "" neocomplcache
+ " NeoBundle 'Shougo/neocomplcache'
+ " if filereadable(expand('~/.vimrc.neocomplcache'))
+ "   source ~/.vimrc.neocomplcache
+ " endif
+
+ "" neosnippet
+ NeoBundle 'git@github.com:Shougo/neosnippet.vim.git'
+
+ NeoBundle 'vim-scripts/AutoComplPop.git'
 
  filetype plugin indent on     " Required!
  "
