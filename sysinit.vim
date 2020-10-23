@@ -12,7 +12,7 @@ endif
 
 " syntax enable
 set ts=2
-set number
+" set number
 set autoread
 
 nmap <Tab> <Plug>Sneak_s
@@ -72,6 +72,8 @@ let mapleader=","
 " Gist
 " let g:gist_open_browser_after_post = 1
 " let g:gist_post_private = 1
+let g:github_user = "gipsy"
+let g:gist_token = "2d2b306d71c67ad8f97eaf88259e7f494ea55d0e"
 
 " vim-slime sent command to tmux
 " let g:slime_target = "tmux"
@@ -110,7 +112,6 @@ nmap <S-Tab> gT
 " Quickly edit/reload the vimrc file
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
-
 
 " Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
@@ -241,6 +242,9 @@ Plug 'tpope/vim-fugitive'
 " Plug 'Lokaltog/vim-easymotion'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+" Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+" Plug 'ryanoasis/vim-devicons'
+" Plug 'vwxyutarooo/nerdtree-devicons-syntax'
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 " Plug 'tpope/vim-haml'
 " Plug 'slim-template/vim-slim'
@@ -259,7 +263,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'mattn/gist-vim'
 " Plug 'majutsushi/tagbar'
 " Plug 'corntrace/bufexplorer'
-" Plug 'mattn/webapi-vim'
+Plug 'mattn/webapi-vim'
 " Plug 'Rykka/colorv.vim'
 Plug 'sjl/gundo.vim'
 " Plug 'moll/vim-node'
@@ -267,7 +271,7 @@ Plug 'sjl/gundo.vim'
 " Plug 'pangloss/vim-javascript'
 " Plug 'ElmCast/elm-vim'
 " Plug 'marijnh/tern_for_vim'
-Plug 'Raimondi/delimitMate'
+" Plug 'Raimondi/delimitMate'
 " Plug 'maksimr/vim-jsbeautify.git'
 " Plug 'jiangmiao/simple-javascript-indenter'
 Plug 'Yggdroot/indentLine'
@@ -287,14 +291,16 @@ Plug 'tpope/vim-surround'
 " Plug 'https://bitbucket.org/ns9tks/vim-fuzzyfinder'
 " syntastic
 " Plug 'scrooloose/syntastic'
-Plug 'posva/vim-vue', { 'branch': 'performance-enhancement' }
+" Plug 'posva/vim-vue', { 'branch': 'performance-enhancement' }
+Plug 'storyn26383/vim-vue'
 " JS syntax, supports ES6
-Plug 'othree/yajs.vim', {
-            \   'for': ['javascript', 'vue']
-            \ }
+" Plug 'othree/yajs.vim', {
+"             \   'for': ['javascript', 'vue']
+"             \ }
 " Plug 'sekel/vim-vue-syntastic'
 " Plug 'leafOfTree/vim-vue-plugin'
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
+" let g:polyglot_disabled = ['vue']
 " Use neocomplete.
 " Plug 'Shougo/neocomplete.vim.git'
 " Plug 'Shougo/neocomplcache'
@@ -322,14 +328,16 @@ if has('nvim')
     \ 'do': 'bash install.sh',
     \ }
 
-  Plug 'neoclide/coc-denite'
   Plug 'neoclide/vim-node-rpc'
-  "Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-  Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+  Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+  "Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'neoclide/coc-denite'
+  Plug 'liuchengxu/vim-clap'
 
 endif
 call plug#end()
-" call coc#util#install()
+"call coc#util#install()
+source $HOME/.config/nvim/plug-config/coc.vim
 let g:deoplete#enable_at_startup = 0
 
 tnoremap <Esc> <C-\><C-n>
@@ -350,6 +358,10 @@ let g:coc_snippet_prev = '<c-k>'
 
 " Use <C-j> for both expand and jump (make expand higher priority.)
 imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" let g:UltiSnipsExpandTrigger="<tab>"
+" let g:UltiSnipsJumpForwardTrigger="<tab>"
+" let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 vmap <leader>p  <Plug>(coc-format-selected)
@@ -376,13 +388,23 @@ endfunction
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
+" Highlight full name (not only icons). You need to add 
+" this if you don't have vim-devicons and want highlight.
+" let g:NERDTreeFileExtensionHighlightFullName = 1
+" let g:NERDTreeExactMatchHighlightFullName = 1
+" let g:NERDTreePatternMatchHighlightFullName = 1
+" let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+" let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+" let g:NERDTreeLimitedSyntax = 1
+
 " Automatically start language servers.
 let g:LanguageClient_autoStart=1
 let g:LanguageClient_serverCommands = {
   \ 'vue': ['vls']
   \ }
 
-let g:vue_disable_pre_processors=0
+" let g:vue_disable_pre_processors=0
+let g:vue_pre_processors = 'detect_on_enter'
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -429,7 +451,7 @@ let g:unite_source_menu_menus.git.command_candidates = [
     \]
 nnoremap <silent>[menu]g :Unite -silent -start-insert menu:git<CR>
 
-" syntax on
+syntax on
 " set relativenumber
 
 " Vim syntax file
@@ -439,11 +461,6 @@ nnoremap <silent>[menu]g :Unite -silent -start-insert menu:git<CR>
 if exists("b:current_syntax")
   finish
 endif
-
-runtime! syntax/html.vim
-syntax clear htmlTagName
-syntax match htmlTagName contained "\<[a-zA-Z0-9:-]*\>"
-unlet! b:current_syntax
 
 ""
 " Get the pattern for a HTML {name} attribute with {value}.
@@ -460,44 +477,43 @@ endfunction
 ""
 " Register {language} for a given {tag}. If [attr_override] is given and not
 " empty, it will be used for the attribute pattern.
-function! s:register_language(language, tag, ...)
-  let attr_override = a:0 ? a:1 : ''
-  let attr = !empty(attr_override) ? attr_override : s:attr('lang', a:language)
+" function! s:register_language(language, tag, ...)
+"   let attr_override = a:0 ? a:1 : ''
+"   let attr = !empty(attr_override) ? attr_override : s:attr('lang', a:language)
+"
+"   if s:syntax_available(a:language)
+"     execute 'syntax include @' . a:language . ' syntax/' . a:language . '.vim'
+"     unlet! b:current_syntax
+"     execute 'syntax region vue_' . a:language
+"           \ 'keepend'
+"           \ 'start=/<' . a:tag . '\>\_[^>]*' . attr . '\_[^>]*>/'
+"           \ 'end="</' . a:tag . '>"me=s-1'
+"           \ 'contains=@' . a:language . ',vueSurroundingTag'
+"           \ 'fold'
+"   endif
+" endfunction
 
-  if s:syntax_available(a:language)
-    execute 'syntax include @' . a:language . ' syntax/' . a:language . '.vim'
-    unlet! b:current_syntax
-    execute 'syntax region vue_' . a:language
-          \ 'keepend'
-          \ 'start=/<' . a:tag . '\>\_[^>]*' . attr . '\_[^>]*>/'
-          \ 'end="</' . a:tag . '>"me=s-1'
-          \ 'contains=@' . a:language . ',vueSurroundingTag'
-          \ 'fold'
-  endif
-endfunction
-
-if !exists("g:vue_disable_pre_processors") || !g:vue_disable_pre_processors
-  call s:register_language('less', 'style')
-  call s:register_language('pug', 'template', s:attr('lang', '\%(pug\|jade\)'))
-  call s:register_language('slm', 'template')
-  call s:register_language('handlebars', 'template')
-  call s:register_language('haml', 'template')
-  call s:register_language('typescript', 'script', '\%(lang=\("\|''\)[^\1]*\(ts\|typescript\)[^\1]*\1\|ts\)')
-  call s:register_language('coffee', 'script')
-  call s:register_language('stylus', 'style')
-  call s:register_language('sass', 'style')
-  call s:register_language('scss', 'style')
-endif
+" if !exists("g:vue_disable_pre_processors") || !g:vue_disable_pre_processors
+"   call s:register_language('less', 'style')
+"   call s:register_language('pug', 'template', s:attr('lang', '\%(pug\|jade\)'))
+"   call s:register_language('slm', 'template')
+"   call s:register_language('handlebars', 'template')
+"   call s:register_language('haml', 'template')
+"   call s:register_language('typescript', 'script', '\%(lang=\("\|''\)[^\1]*\(ts\|typescript\)[^\1]*\1\|ts\)')
+"   call s:register_language('coffee', 'script')
+"   call s:register_language('stylus', 'style')
+"   call s:register_language('sass', 'style')
+"   call s:register_language('scss', 'style')
+" endif
 
 syn region  vueSurroundingTag   contained start=+<\(script\|style\|template\)+ end=+>+ fold contains=htmlTagN,htmlString,htmlArg,htmlValue,htmlTagError,htmlEvent
 syn keyword htmlSpecialTagName  contained template
 syn keyword htmlArg             contained scoped ts
 syn match   htmlArg "[@v:][-:.0-9_a-z]*\>" contained
 
-let b:current_syntax = "vue"
 
 "Javascript-libraries-syntax
-let g:used_javascript_libs = 'jquery,underscore,requirejs'
+" let g:used_javascript_libs = 'jquery,underscore,requirejs'
 
 "Tern settings
 let g:tern_map_keys = 1
